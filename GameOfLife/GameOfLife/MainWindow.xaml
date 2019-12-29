@@ -29,11 +29,10 @@
 
             <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}}" Margin="10"/>
-            <TextBlock Text="{Binding Path=CountTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
+            <TextBlock Text="{Binding Path=CurrentGHenerationTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=Runtime, UpdateSourceTrigger=PropertyChanged, StringFormat=Runtime: {0:mm\\:ss\\:ffff}, FallbackValue=Runtime 00:00:00.0000}" Margin="10"/>
 
-            <!--custom fill gauge
-            {Binding maxAnzahlFelder, StringFormat=maxAnzahlFelder: {0}, FallbackValue=N/A}-->
+            <!--custom fill gauge -->
             <lvc:Gauge From="0" To="{Binding MaxAnzahlFelder}" Value="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged}" LabelsVisibility="Collapsed" Height="120" BorderBrush="Black">
                 <lvc:Gauge.GaugeActiveFill>
                     <LinearGradientBrush>
@@ -46,17 +45,5 @@
 
         </StackPanel>
         <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631"/>
-
-        <!--<lvc:Gauge Series="{Binding SeriesCollection}" LegendLocation="Right" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-            <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Values" LabelFormatter="{Binding YFormatter}"/>
-            </lvc:CartesianChart.AxisY>
-            --><!--<lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Time Elapse" Labels="{Binding Labels}"></lvc:Axis>
-            </lvc:CartesianChart.AxisX>--><!--
-        </lvc:Gauge>-->
-
-        
-
     </Grid>
 </Window>

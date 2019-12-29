@@ -22,8 +22,9 @@ namespace GameOfLife
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public DispatcherTimer timer, runtimer;
+        public DispatcherTimer updateTimer, runtimeTimer;
         private Random randomizer = new Random();
+
         const int anzahlZellenBreit = 30;
         const int anzahlZellenHoch = 30;
 
@@ -36,9 +37,8 @@ namespace GameOfLife
             }
         }
 
-
-
         Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
+
         private int maxGenerationCount;
         public int MaxGenerationCount { get { return maxGenerationCount;  }
             set
@@ -56,13 +56,8 @@ namespace GameOfLife
             }
         }
 
-
         private Brush entityDead = Brushes.Cyan;
         private Brush entityAlive = Brushes.Green;
-
-        //public SeriesCollection SeriesCollection { get; set; }
-        //public string[] Labels { get; set; }
-        //public Func<double, string> YFormatter { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -93,14 +88,13 @@ namespace GameOfLife
             }
         }
 
-        private int countTurn;
-       
-        public int CountTurn
+        private int currentGHenerationTurn;        
+        public int CurrentGHenerationTurn
         {
-            get { return countTurn; }
+            get { return currentGHenerationTurn; }
             set {
-                countTurn = value;
-                this.NotifyPropertyChanged("CountTurn");
+                currentGHenerationTurn = value;
+                this.NotifyPropertyChanged("CurrentGHenerationTurn");
             }
         }
 
@@ -108,64 +102,28 @@ namespace GameOfLife
         private TimeSpan runtime;
         public TimeSpan Runtime { get => runtime; set { runtime = value; this.NotifyPropertyChanged("Runtime"); } }
 
-       
-
         public MainWindow()
         {
             InitializeComponent();
 
-            timer = new DispatcherTimer();
-            runtimer = new DispatcherTimer();
+            updateTimer = new DispatcherTimer();
+            runtimeTimer = new DispatcherTimer();
 
-            timer.Interval = TimeSpan.FromSeconds(0.033);
-            timer.Tick += Timer_Tick;
+            updateTimer.Interval = TimeSpan.FromSeconds(0.033);
+            updateTimer.Tick += Timer_Tick;
 
-            runtimer.Interval = TimeSpan.FromSeconds(1);
-            runtimer.Tick += RunTimer_Tick;
+            runtimeTimer.Interval = TimeSpan.FromSeconds(1);
+            runtimeTimer.Tick += RunTimer_Tick;
 
             this.DataContext = this;
 
             CountDeadEntity = 0;
             CountAliveEntity = 0;
-            CountTurn = 0;
+            CurrentGHenerationTurn = 0;
             MaxAnzahlFelder = anzahlZellenBreit * anzahlZellenHoch;
 
             EnableOptions = true;
-
-            //SeriesCollection = new SeriesCollection
-            //{
-            //    new LineSeries
-            //    {
-            //        Title = "Alive Entities",
-            //        LineSmoothness = 0,
-            //        Values = new ChartValues<double>(), // { 4, 6, 5, 2 ,4 },
-            //        PointGeometrySize = 5,
-            //        PointForeground = Brushes.Gray,
-                    
-            //    },
-               
-            //    new LineSeries
-            //    {
-            //        Title = "Dead Entities",
-            //        LineSmoothness = 0,
-            //        Values = new ChartValues<double>(), // { 4,2,7,2,7 },
-            //        PointGeometry = DefaultGeometries.Square,
-            //        PointGeometrySize = 5,
-            //        PointForeground = Brushes.Gray
-            //    }
-            //};
-
-            ////Labels = new[] {"Jan", "Feb", "Mar", "Apr", "May"};
-            //YFormatter = value => value.ToString("{0}");
-
-            ////modifying any series values will also animate and update the chart
-            ////SeriesCollection[3].Values.Add(5d);
-
-            //DataContext = this;
         }
-
-            //MaxGenerationCount = 100;
-        
 
         private void RunTimer_Tick(object sender, EventArgs e)
         {
@@ -302,29 +260,32 @@ namespace GameOfLife
                 }
             }
 
-            CountTurn++;
+            CurrentGHenerationTurn++;
 
             //SeriesCollection[0].Values.Add((double)CountAliveEntity);
             //SeriesCollection[1].Values.Add((double)CountDeadEntity);
 
-            if (cbMaxGen.IsChecked == true && CountTurn >= MaxGenerationCount)
+            if (cbMaxGen.IsChecked == true && CurrentGHenerationTurn >= MaxGenerationCount)
             {
                 EnableTimer();
             }
         }
 
-        private void CountNeightbors(ref int[,] anzahlNachbarn, int i, int j)
+        private void CountNeightbors(ref int[,] anzahlNachbarn, int X, int Y)
         {
-            int iDarüber = i - 1;
+            int iDarüber = X - 1;
             if (iDarüber < 0)
             { iDarüber = anzahlZellenHoch - 1; }
-            int iDarunter = i + 1;
+
+            int iDarunter = X + 1;
             if (iDarunter >= anzahlZellenHoch)
             { iDarunter = 0; }
-            int jLinks = j - 1;
+
+            int jLinks = Y - 1;
             if (jLinks < 0)
             { jLinks = anzahlZellenBreit - 1; }
-            int jRechts = j + 1;
+
+            int jRechts = Y + 1;
             if (jRechts >= anzahlZellenBreit)
             { jRechts = 0; }
 
@@ -332,29 +293,31 @@ namespace GameOfLife
 
             if (felder[iDarüber, jLinks].Fill == entityAlive)
             { nachbarn++; }
-            if (felder[iDarüber, j].Fill == entityAlive)
+            if (felder[iDarüber, Y].Fill == entityAlive)
             { nachbarn++; }
             if (felder[iDarüber, jRechts].Fill == entityAlive)
             { nachbarn++; }
-            if (felder[i, jLinks].Fill == entityAlive)
+
+            if (felder[X, jLinks].Fill == entityAlive)
             { nachbarn++; }
-            if (felder[i, jRechts].Fill == entityAlive)
+            if (felder[X, jRechts].Fill == entityAlive)
             { nachbarn++; }
+
             if (felder[iDarunter, jLinks].Fill == entityAlive)
             { nachbarn++; }
-            if (felder[iDarunter, j].Fill == entityAlive)
+            if (felder[iDarunter, Y].Fill == entityAlive)
             { nachbarn++; }
             if (felder[iDarunter, jRechts].Fill == entityAlive)
             { nachbarn++; }
 
-            anzahlNachbarn[i, j] = nachbarn;
+            anzahlNachbarn[X, Y] = nachbarn;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!timer.IsEnabled)
+            if (!updateTimer.IsEnabled)
             {
-                CountTurn = 0;
+                CurrentGHenerationTurn = 0;
                 RandomizeField();
 
                 RuntimeStart = GetUnixTimeStampMilliseconds();
@@ -362,8 +325,6 @@ namespace GameOfLife
             }
 
             EnableTimer();
-            //runtimer.IsEnabled = timer.IsEnabled;
-            //EnableOptions = !timer.IsEnabled;
         }
 
         private static double GetUnixTimeStampMilliseconds()
@@ -373,19 +334,19 @@ namespace GameOfLife
 
         private void EnableTimer(bool an = true)
         {
-            if (timer.IsEnabled)
+            if (updateTimer.IsEnabled)
             {
-                timer.Stop();
+                updateTimer.Stop();
                 buttonStartStop.Content = "Starte Animation!";
             }
             else
             {
-                timer.Start();
+                updateTimer.Start();
                 buttonStartStop.Content = "Stoppe Animation!";
             }
 
-            EnableOptions = !timer.IsEnabled;
-            runtimer.IsEnabled = timer.IsEnabled;
+            EnableOptions = !updateTimer.IsEnabled;
+            runtimeTimer.IsEnabled = updateTimer.IsEnabled;
         }
         
         public void NotifyPropertyChanged(string propName)
@@ -398,7 +359,7 @@ namespace GameOfLife
         {
             CountDeadEntity = 0;
             CountAliveEntity = 0;
-            CountTurn = 0;
+            CurrentGHenerationTurn = 0;
             RandomizeField();
         }
     }
