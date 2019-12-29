@@ -58,6 +58,18 @@ namespace GameOfLife
             }
         }
 
+        private int countTurn;
+
+        public int CountTurn
+        {
+            get { return countTurn; }
+            set {
+                countTurn = value;
+                this.NotifyPropertyChanged("CountTurn");
+            }
+        }
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -97,6 +109,7 @@ namespace GameOfLife
                     else
                     {
                         r.Fill = (randomizer.Next(0, 2) == 1) ? entityDead : entityAlive;
+
                         if (r.Fill == entityDead)
                         {
                             CountDeadEntity++;
@@ -138,41 +151,12 @@ namespace GameOfLife
             {
                 for (int j = 0; j < anzahlZellenBreit; j++)
                 {
-                    int iDarüber = i - 1;
-                    if (iDarüber < 0)
-                    { iDarüber = anzahlZellenHoch - 1; }
-                    int iDarunter = i + 1;
-                    if (iDarunter >= anzahlZellenHoch)
-                    { iDarunter = 0; }
-                    int jLinks = j - 1;
-                    if (jLinks < 0)
-                    { jLinks = anzahlZellenBreit - 1; }
-                    int jRechts = j + 1;
-                    if (jRechts >= anzahlZellenBreit)
-                    { jRechts = 0; }
-
-                    int nachbarn = 0;
-
-                    if (felder[iDarüber, jLinks].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[iDarüber, j].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[iDarüber, jRechts].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[i, jLinks].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[i, jRechts].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[iDarunter, jLinks].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[iDarunter, j].Fill == Brushes.Red)
-                    { nachbarn++; }
-                    if (felder[iDarunter, jRechts].Fill == Brushes.Red)
-                    { nachbarn++; }
-
-                    anzahlNachbarn[i, j] = nachbarn;
+                    CountNeightbors(ref anzahlNachbarn, i, j);
                 }
             }
+
+            CountAliveEntity = 0;
+            CountDeadEntity = 0;
 
             for (int i = 0; i < anzahlZellenHoch; i++)
             {
@@ -180,14 +164,53 @@ namespace GameOfLife
                 {
                     if(anzahlNachbarn[i, j] < 2 || anzahlNachbarn[i, j] > 3)
                     {
-                        felder[i, j].Fill = Brushes.Cyan;
+                        felder[i, j].Fill = entityDead;
+                        CountDeadEntity++;
                     }
                     else if (anzahlNachbarn[i, j] == 3)
                     {
-                        felder[i, j].Fill = Brushes.Red;
+                        felder[i, j].Fill = entityAlive;
+                        CountAliveEntity++;
                     }
                 }
             }
+        }
+
+        private void CountNeightbors(ref int[,] anzahlNachbarn, int i, int j)
+        {
+            int iDarüber = i - 1;
+            if (iDarüber < 0)
+            { iDarüber = anzahlZellenHoch - 1; }
+            int iDarunter = i + 1;
+            if (iDarunter >= anzahlZellenHoch)
+            { iDarunter = 0; }
+            int jLinks = j - 1;
+            if (jLinks < 0)
+            { jLinks = anzahlZellenBreit - 1; }
+            int jRechts = j + 1;
+            if (jRechts >= anzahlZellenBreit)
+            { jRechts = 0; }
+
+            int nachbarn = 0;
+
+            if (felder[iDarüber, jLinks].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[iDarüber, j].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[iDarüber, jRechts].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[i, jLinks].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[i, jRechts].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[iDarunter, jLinks].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[iDarunter, j].Fill == entityAlive)
+            { nachbarn++; }
+            if (felder[iDarunter, jRechts].Fill == entityAlive)
+            { nachbarn++; }
+
+            anzahlNachbarn[i, j] = nachbarn;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
