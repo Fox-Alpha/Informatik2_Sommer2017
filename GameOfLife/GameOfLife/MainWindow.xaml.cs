@@ -89,12 +89,12 @@ namespace GameOfLife
         }
 
         private int currentGHenerationTurn;        
-        public int CurrentGHenerationTurn
+        public int CurrentGenerationTurn
         {
             get { return currentGHenerationTurn; }
             set {
                 currentGHenerationTurn = value;
-                this.NotifyPropertyChanged("CurrentGHenerationTurn");
+                this.NotifyPropertyChanged("CurrentGenerationTurn");
             }
         }
 
@@ -119,7 +119,7 @@ namespace GameOfLife
 
             CountDeadEntity = 0;
             CountAliveEntity = 0;
-            CurrentGHenerationTurn = 0;
+            CurrentGenerationTurn = 0;
             MaxAnzahlFelder = anzahlZellenBreit * anzahlZellenHoch;
 
             EnableOptions = true;
@@ -260,12 +260,12 @@ namespace GameOfLife
                 }
             }
 
-            CurrentGHenerationTurn++;
+            CurrentGenerationTurn++;
 
             //SeriesCollection[0].Values.Add((double)CountAliveEntity);
             //SeriesCollection[1].Values.Add((double)CountDeadEntity);
 
-            if (cbMaxGen.IsChecked == true && CurrentGHenerationTurn >= MaxGenerationCount)
+            if (cbMaxGen.IsChecked == true && CurrentGenerationTurn >= MaxGenerationCount)
             {
                 EnableTimer();
             }
@@ -317,7 +317,7 @@ namespace GameOfLife
         {
             if (!updateTimer.IsEnabled)
             {
-                CurrentGHenerationTurn = 0;
+                CurrentGenerationTurn = 0;
                 RandomizeField();
 
                 RuntimeStart = GetUnixTimeStampMilliseconds();
@@ -359,7 +359,7 @@ namespace GameOfLife
         {
             CountDeadEntity = 0;
             CountAliveEntity = 0;
-            CurrentGHenerationTurn = 0;
+            CurrentGenerationTurn = 0;
             RandomizeField();
         }
     }

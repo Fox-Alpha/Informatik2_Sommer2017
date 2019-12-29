@@ -27,9 +27,9 @@
             </WrapPanel>
             
 
-            <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}}" Margin="10"/>
-            <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}}" Margin="10"/>
-            <TextBlock Text="{Binding Path=CurrentGHenerationTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
+            <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}, FallbackValue=CountAliveEntity }" Margin="10"/>
+            <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}, FallbackValue=CountDeadEntity}" Margin="10"/>
+            <TextBlock Text="{Binding Path=CurrentGenerationTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}, FallbackValue=CurrentGenerationTurn}" Margin="10"/>
             <TextBlock Text="{Binding Path=Runtime, UpdateSourceTrigger=PropertyChanged, StringFormat=Runtime: {0:mm\\:ss\\:ffff}, FallbackValue=Runtime 00:00:00.0000}" Margin="10"/>
 
             <!--custom fill gauge -->
