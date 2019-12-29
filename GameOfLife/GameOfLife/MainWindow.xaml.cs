@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,17 +17,63 @@ using System.Windows.Threading;
 
 namespace GameOfLife
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        DispatcherTimer timer;
+        private Random randomizer = new Random(197702);
+        const int anzahlZellenBreit = 30;
+        const int anzahlZellenHoch = 30;
+        Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
+        
+
+        private Brush entityDead = Brushes.Cyan;
+        private Brush entityAlive = Brushes.Green;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private int countAliveEntity;
+        public int CountAliveEntity {
+            get
+            {
+                return countAliveEntity;
+            }
+            set
+            {
+                countAliveEntity = value;
+                this.NotifyPropertyChanged("CountAliveEntity");
+            }
+        }
+
+        private int countDeadEntity;
+        public int CountDeadEntity
+        {
+            get
+            {
+                return countDeadEntity;
+            }
+            set
+            {
+                countDeadEntity = value;
+                this.NotifyPropertyChanged("CountDeadEntity");
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Random würfel = new Random();
+            timer = new DispatcherTimer();
 
-            zeichenfläche.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            zeichenfläche.Arrange(new Rect(0.0, 0.0, zeichenfläche.DesiredSize.Width, zeichenfläche.DesiredSize.Height));
+            timer.Interval = TimeSpan.FromSeconds(0.1);
+            timer.Tick += Timer_Tick;
 
+            this.DataContext = this;
+
+            CountDeadEntity = 0;
+            CountAliveEntity = 0;
+        }
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
             for (int i = 0; i < anzahlZellenHoch; i++)
             {
                 for (int j = 0; j < anzahlZellenBreit; j++)
@@ -34,7 +81,30 @@ namespace GameOfLife
                     Rectangle r = new Rectangle();
                     r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
                     r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
-                    r.Fill = (würfel.Next(0, 2) == 1) ? Brushes.Cyan : Brushes.Red;
+
+                    int rnd = randomizer.Next(0, 100);
+
+                    if (rnd <= 45)
+                    {
+                        r.Fill = entityDead;
+                        CountDeadEntity++;
+                    }
+                    else if (rnd > 75)
+                    {
+                        r.Fill = entityAlive;
+                        CountAliveEntity++;
+                    }
+                    else
+                    {
+                        r.Fill = (randomizer.Next(0, 2) == 1) ? entityDead : entityAlive;
+                        if (r.Fill == entityDead)
+                        {
+                            CountDeadEntity++;
+                        }
+                        else
+                            CountAliveEntity++;
+                    }
+
                     zeichenfläche.Children.Add(r);
                     Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
                     Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
@@ -44,19 +114,21 @@ namespace GameOfLife
                 }
             }
 
-            timer.Interval = TimeSpan.FromSeconds(0.1);
-            timer.Tick += Timer_Tick;
-        }
 
-        const int anzahlZellenBreit = 30;
-        const int anzahlZellenHoch = 30;
-        Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
-        DispatcherTimer timer = new DispatcherTimer();
+        }
 
         private void R_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ((Rectangle)sender).Fill =
-                (((Rectangle)sender).Fill == Brushes.Cyan) ? Brushes.Red : Brushes.Cyan;
+            if (sender is Rectangle)
+            {
+                Rectangle r = sender as Rectangle;
+                if (r.Fill == Brushes.Green)
+                {
+                    r.Fill = entityDead;
+                }
+                else
+                    r.Fill = entityAlive;
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -131,5 +203,14 @@ namespace GameOfLife
                 buttonStartStop.Content = "Stoppe Animation!";
             }
         }
+
+        
+
+        public void NotifyPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+
     }
 }
