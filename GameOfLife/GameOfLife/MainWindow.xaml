@@ -15,8 +15,8 @@
         
         <StackPanel Orientation="Vertical" Grid.Column="0" Background="Aqua">
             <Button x:Name="buttonStartStop" Content="Starte Animation!" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="Button_Click"/>
-            <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged}" Margin="10"/>
-            <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged}" Margin="10"/>
+            <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}}" Margin="10"/>
+            <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}}" Margin="10"/>
         </StackPanel>
         <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="Beige"/>
     </Grid>
