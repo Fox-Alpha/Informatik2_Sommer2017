@@ -83,6 +83,7 @@ namespace GameOfLife
 
             CountDeadEntity = 0;
             CountAliveEntity = 0;
+            CountTurn = 0;
         }
         private void Window_ContentRendered(object sender, EventArgs e)
         {
@@ -174,6 +175,8 @@ namespace GameOfLife
                     }
                 }
             }
+
+            CountTurn++;
         }
 
         private void CountNeightbors(ref int[,] anzahlNachbarn, int i, int j)
