@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GameOfLife"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="771.267" Width="1011.608" ContentRendered="Window_ContentRendered">
+        Title="MainWindow" MaxHeight="750" MaxWidth="1000" ContentRendered="Window_ContentRendered">
     
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
@@ -15,7 +15,6 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="300"/>
         </Grid.RowDefinitions>
         
         <StackPanel Orientation="Vertical" Grid.Column="0" Background="Aqua">
@@ -33,11 +32,9 @@
             <TextBlock Text="{Binding Path=CountTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=Runtime, UpdateSourceTrigger=PropertyChanged, StringFormat=Runtime: {0:mm\\:ss\\:ffff}, FallbackValue=Runtime 00:00:00.0000}" Margin="10"/>
 
-            <!--custom fill gauge-->
-            <lvc:Gauge
-                   From="0" To="900" Value="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged}"
-                   LabelsVisibility="Collapsed"
-                       Height="150">
+            <!--custom fill gauge
+            {Binding maxAnzahlFelder, StringFormat=maxAnzahlFelder: {0}, FallbackValue=N/A}-->
+            <lvc:Gauge From="0" To="{Binding MaxAnzahlFelder}" Value="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged}" LabelsVisibility="Collapsed" Height="120" BorderBrush="Black">
                 <lvc:Gauge.GaugeActiveFill>
                     <LinearGradientBrush>
                         <GradientStop Color="Red" Offset="0.0" />

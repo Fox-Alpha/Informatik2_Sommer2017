@@ -23,9 +23,21 @@ namespace GameOfLife
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public DispatcherTimer timer, runtimer;
-        private Random randomizer = new Random(197702);
+        private Random randomizer = new Random();
         const int anzahlZellenBreit = 30;
         const int anzahlZellenHoch = 30;
+
+        private int maxAnzahlFelder = 0;
+        public int MaxAnzahlFelder { get => maxAnzahlFelder;
+            set
+            {
+                maxAnzahlFelder = value;
+                this.NotifyPropertyChanged("MaxAnzahlFelder");
+            }
+        }
+
+
+
         Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
         private int maxGenerationCount;
         public int MaxGenerationCount { get { return maxGenerationCount;  }
@@ -96,6 +108,8 @@ namespace GameOfLife
         private TimeSpan runtime;
         public TimeSpan Runtime { get => runtime; set { runtime = value; this.NotifyPropertyChanged("Runtime"); } }
 
+       
+
         public MainWindow()
         {
             InitializeComponent();
@@ -114,6 +128,7 @@ namespace GameOfLife
             CountDeadEntity = 0;
             CountAliveEntity = 0;
             CountTurn = 0;
+            MaxAnzahlFelder = anzahlZellenBreit * anzahlZellenHoch;
 
             EnableOptions = true;
 
@@ -273,6 +288,17 @@ namespace GameOfLife
                         felder[i, j].Fill = entityAlive;
                         CountAliveEntity++;
                     }
+                    else
+                    {
+                        if (felder[i, j].Fill == entityDead)
+                        {
+                            CountDeadEntity++;
+                        }
+                        else
+                        {
+                            CountAliveEntity++;
+                        }
+                    }
                 }
             }
 
@@ -326,14 +352,17 @@ namespace GameOfLife
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            CountTurn = 0;
-            RandomizeField();
+            if (!timer.IsEnabled)
+            {
+                CountTurn = 0;
+                RandomizeField();
 
-            RuntimeStart = GetUnixTimeStampMilliseconds();
-            Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
+                RuntimeStart = GetUnixTimeStampMilliseconds();
+                Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
+            }
 
             EnableTimer();
-            runtimer.IsEnabled = timer.IsEnabled;
+            //runtimer.IsEnabled = timer.IsEnabled;
             //EnableOptions = !timer.IsEnabled;
         }
 
