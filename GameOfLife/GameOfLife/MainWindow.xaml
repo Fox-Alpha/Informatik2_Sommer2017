@@ -26,6 +26,7 @@
             <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=CountTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
+            <TextBlock Text="{Binding Path=Runtime, UpdateSourceTrigger=PropertyChanged, StringFormat=Runtime: {0:mm\\:ss\\:ffff}, FallbackValue=Runtime 00:00:00.0000}" Margin="10"/>
 
         </StackPanel>
         <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631"/>

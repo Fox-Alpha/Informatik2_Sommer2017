@@ -85,7 +85,9 @@ namespace GameOfLife
             }
         }
 
-        
+        private double RuntimeStart;
+        private TimeSpan runtime;
+        public TimeSpan Runtime { get => runtime; set { runtime = value; this.NotifyPropertyChanged("Runtime"); } }
 
         public MainWindow()
         {
@@ -97,7 +99,7 @@ namespace GameOfLife
             timer.Interval = TimeSpan.FromSeconds(0.033);
             timer.Tick += Timer_Tick;
 
-            runtimer.Interval = TimeSpan.FromSeconds(1000);
+            runtimer.Interval = TimeSpan.FromSeconds(1);
             runtimer.Tick += RunTimer_Tick;
 
             this.DataContext = this;
@@ -107,12 +109,13 @@ namespace GameOfLife
             CountTurn = 0;
 
             EnableOptions = true;
+            
             //MaxGenerationCount = 100;
         }
 
         private void RunTimer_Tick(object sender, EventArgs e)
         {
-            
+            Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds()- RuntimeStart);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -283,8 +286,18 @@ namespace GameOfLife
         {
             CountTurn = 0;
             RandomizeField();
+
+            RuntimeStart = GetUnixTimeStampMilliseconds();
+            Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
+
             EnableTimer();
+            runtimer.IsEnabled = timer.IsEnabled;
             //EnableOptions = !timer.IsEnabled;
+        }
+
+        private static double GetUnixTimeStampMilliseconds()
+        {
+            return (double)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
         }
 
         private void EnableTimer(bool an = true)
@@ -301,6 +314,7 @@ namespace GameOfLife
             }
 
             EnableOptions = !timer.IsEnabled;
+            runtimer.IsEnabled = timer.IsEnabled;
         }
         
         public void NotifyPropertyChanged(string propName)
