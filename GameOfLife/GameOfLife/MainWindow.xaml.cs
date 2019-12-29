@@ -24,7 +24,15 @@ namespace GameOfLife
         const int anzahlZellenBreit = 30;
         const int anzahlZellenHoch = 30;
         Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
-        
+        private int maxGenerationCount;
+        public int MaxGenerationCount { get { return maxGenerationCount;  }
+            set
+            {
+                maxGenerationCount = value;
+                this.NotifyPropertyChanged("MaxGenerationCount");
+            }
+        }
+
 
         private Brush entityDead = Brushes.Cyan;
         private Brush entityAlive = Brushes.Green;
@@ -69,6 +77,7 @@ namespace GameOfLife
             }
         }
 
+       
 
         public MainWindow()
         {
@@ -84,8 +93,14 @@ namespace GameOfLife
             CountDeadEntity = 0;
             CountAliveEntity = 0;
             CountTurn = 0;
+            //MaxGenerationCount = 100;
         }
         private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            RandomizeField();
+        }
+
+        private void RandomizeField()
         {
             for (int i = 0; i < anzahlZellenHoch; i++)
             {
@@ -127,8 +142,6 @@ namespace GameOfLife
                     felder[i, j] = r;
                 }
             }
-
-
         }
 
         private void R_MouseDown(object sender, MouseButtonEventArgs e)
@@ -177,6 +190,11 @@ namespace GameOfLife
             }
 
             CountTurn++;
+
+            if (cbMaxGen.IsChecked == true && CountTurn >= MaxGenerationCount)
+            {
+                EnableTimer();
+            }
         }
 
         private void CountNeightbors(ref int[,] anzahlNachbarn, int i, int j)
@@ -218,7 +236,13 @@ namespace GameOfLife
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(timer.IsEnabled)
+            CountTurn = 0;
+            EnableTimer();
+        }
+
+        private void EnableTimer(bool an = true)
+        {
+            if (timer.IsEnabled)
             {
                 timer.Stop();
                 buttonStartStop.Content = "Starte Animation!";
@@ -230,7 +254,6 @@ namespace GameOfLife
             }
         }
 
-        
 
         public void NotifyPropertyChanged(string propName)
         {
