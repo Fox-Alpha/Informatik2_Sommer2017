@@ -14,6 +14,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.Defaults;
 
 namespace GameOfLife
 {
@@ -45,6 +48,10 @@ namespace GameOfLife
         private Brush entityDead = Brushes.Cyan;
         private Brush entityAlive = Brushes.Green;
 
+        //public SeriesCollection SeriesCollection { get; set; }
+        //public string[] Labels { get; set; }
+        //public Func<double, string> YFormatter { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private int countAliveEntity;
@@ -75,7 +82,7 @@ namespace GameOfLife
         }
 
         private int countTurn;
-
+       
         public int CountTurn
         {
             get { return countTurn; }
@@ -109,9 +116,41 @@ namespace GameOfLife
             CountTurn = 0;
 
             EnableOptions = true;
-            
-            //MaxGenerationCount = 100;
+
+            //SeriesCollection = new SeriesCollection
+            //{
+            //    new LineSeries
+            //    {
+            //        Title = "Alive Entities",
+            //        LineSmoothness = 0,
+            //        Values = new ChartValues<double>(), // { 4, 6, 5, 2 ,4 },
+            //        PointGeometrySize = 5,
+            //        PointForeground = Brushes.Gray,
+                    
+            //    },
+               
+            //    new LineSeries
+            //    {
+            //        Title = "Dead Entities",
+            //        LineSmoothness = 0,
+            //        Values = new ChartValues<double>(), // { 4,2,7,2,7 },
+            //        PointGeometry = DefaultGeometries.Square,
+            //        PointGeometrySize = 5,
+            //        PointForeground = Brushes.Gray
+            //    }
+            //};
+
+            ////Labels = new[] {"Jan", "Feb", "Mar", "Apr", "May"};
+            //YFormatter = value => value.ToString("{0}");
+
+            ////modifying any series values will also animate and update the chart
+            ////SeriesCollection[3].Values.Add(5d);
+
+            //DataContext = this;
         }
+
+            //MaxGenerationCount = 100;
+        
 
         private void RunTimer_Tick(object sender, EventArgs e)
         {
@@ -238,6 +277,9 @@ namespace GameOfLife
             }
 
             CountTurn++;
+
+            //SeriesCollection[0].Values.Add((double)CountAliveEntity);
+            //SeriesCollection[1].Values.Add((double)CountDeadEntity);
 
             if (cbMaxGen.IsChecked == true && CountTurn >= MaxGenerationCount)
             {

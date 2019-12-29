@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameOfLife"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="771.267" Width="1011.608" ContentRendered="Window_ContentRendered">
     
@@ -12,6 +13,10 @@
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
         
         <StackPanel Orientation="Vertical" Grid.Column="0" Background="Aqua">
             <Button x:Name="buttonStartStop" Content="Starte Animation!" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="Button_Click" />
@@ -28,7 +33,33 @@
             <TextBlock Text="{Binding Path=CountTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=Runtime, UpdateSourceTrigger=PropertyChanged, StringFormat=Runtime: {0:mm\\:ss\\:ffff}, FallbackValue=Runtime 00:00:00.0000}" Margin="10"/>
 
+            <!--custom fill gauge-->
+            <lvc:Gauge
+                   From="0" To="900" Value="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged}"
+                   LabelsVisibility="Collapsed"
+                       Height="150">
+                <lvc:Gauge.GaugeActiveFill>
+                    <LinearGradientBrush>
+                        <GradientStop Color="Red" Offset="0.0" />
+                        <GradientStop Color="Orange" Offset="0.75" />
+                        <GradientStop Color="Green" Offset="1.0" />
+                    </LinearGradientBrush>
+                </lvc:Gauge.GaugeActiveFill>
+            </lvc:Gauge>
+
         </StackPanel>
         <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631"/>
+
+        <!--<lvc:Gauge Series="{Binding SeriesCollection}" LegendLocation="Right" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Values" LabelFormatter="{Binding YFormatter}"/>
+            </lvc:CartesianChart.AxisY>
+            --><!--<lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Time Elapse" Labels="{Binding Labels}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>--><!--
+        </lvc:Gauge>-->
+
+        
+
     </Grid>
 </Window>
