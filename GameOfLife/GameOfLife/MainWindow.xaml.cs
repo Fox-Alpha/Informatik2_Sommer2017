@@ -19,7 +19,7 @@ namespace GameOfLife
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        DispatcherTimer timer;
+        public DispatcherTimer timer, runtimer;
         private Random randomizer = new Random(197702);
         const int anzahlZellenBreit = 30;
         const int anzahlZellenHoch = 30;
@@ -30,6 +30,14 @@ namespace GameOfLife
             {
                 maxGenerationCount = value;
                 this.NotifyPropertyChanged("MaxGenerationCount");
+            }
+        }
+
+        private bool enableOptions;
+        public bool EnableOptions { get => enableOptions;
+            set {
+                    enableOptions = value;
+                this.NotifyPropertyChanged("enableOptions");
             }
         }
 
@@ -77,31 +85,68 @@ namespace GameOfLife
             }
         }
 
-       
+        
 
         public MainWindow()
         {
             InitializeComponent();
 
             timer = new DispatcherTimer();
+            runtimer = new DispatcherTimer();
 
-            timer.Interval = TimeSpan.FromSeconds(0.1);
+            timer.Interval = TimeSpan.FromSeconds(0.033);
             timer.Tick += Timer_Tick;
+
+            runtimer.Interval = TimeSpan.FromSeconds(1000);
+            runtimer.Tick += RunTimer_Tick;
 
             this.DataContext = this;
 
             CountDeadEntity = 0;
             CountAliveEntity = 0;
             CountTurn = 0;
+
+            EnableOptions = true;
             //MaxGenerationCount = 100;
         }
+
+        private void RunTimer_Tick(object sender, EventArgs e)
+        {
+            
+        }
+
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            RandomizeField();
+            //RandomizeField();
+            InitFields();
+
+        }
+        private void InitFields()
+        {
+            for (int i = 0; i < anzahlZellenHoch; i++)
+            {
+                for (int j = 0; j < anzahlZellenBreit; j++)
+                {
+                    Rectangle r = new Rectangle();
+                    r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
+                    r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+
+                    r.Fill = Brushes.Aqua;
+                    zeichenfläche.Children.Add(r);
+                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
+                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                    r.MouseDown += R_MouseDown;
+                }
+            }
         }
 
         private void RandomizeField()
         {
+            zeichenfläche.Children.Clear();
+
+            double unixTimestamp = (double)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            randomizer = new Random((int)unixTimestamp);
+
             for (int i = 0; i < anzahlZellenHoch; i++)
             {
                 for (int j = 0; j < anzahlZellenBreit; j++)
@@ -237,7 +282,9 @@ namespace GameOfLife
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             CountTurn = 0;
+            RandomizeField();
             EnableTimer();
+            //EnableOptions = !timer.IsEnabled;
         }
 
         private void EnableTimer(bool an = true)
@@ -252,14 +299,22 @@ namespace GameOfLife
                 timer.Start();
                 buttonStartStop.Content = "Stoppe Animation!";
             }
+
+            EnableOptions = !timer.IsEnabled;
         }
-
-
+        
         public void NotifyPropertyChanged(string propName)
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
 
+        private void RandomField_Click(object sender, RoutedEventArgs e)
+        {
+            CountDeadEntity = 0;
+            CountAliveEntity = 0;
+            CountTurn = 0;
+            RandomizeField();
+        }
     }
 }

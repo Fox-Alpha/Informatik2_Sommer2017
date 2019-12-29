@@ -14,14 +14,20 @@
         </Grid.ColumnDefinitions>
         
         <StackPanel Orientation="Vertical" Grid.Column="0" Background="Aqua">
-            <Button x:Name="buttonStartStop" Content="Starte Animation!" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="Button_Click"/>
+            <Button x:Name="buttonStartStop" Content="Starte Animation!" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="Button_Click" />
+
+            <WrapPanel Name="OptionPanel" Orientation="Vertical" Background="Beige" IsEnabled="{Binding EnableOptions}">
+                <Button x:Name="RandomField" Content="Randomize Field" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="RandomField_Click"/>
+                <CheckBox Content="Max Generationen" Margin="10" x:Name="cbMaxGen" IsChecked="False"/>
+                <TextBox x:Name="tbMaxGeneration" IsEnabled="{Binding Path=IsChecked, ElementName=cbMaxGen}" Width="100" Margin="10" Text="{Binding MaxGenerationCount, Mode=OneWayToSource, FallbackValue=25}"/>
+            </WrapPanel>
+            
+
             <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}}" Margin="10"/>
             <TextBlock Text="{Binding Path=CountTurn, UpdateSourceTrigger=PropertyChanged, StringFormat=Generation: {0}}" Margin="10"/>
 
-            <CheckBox Content="Max Generationen" Margin="10" x:Name="cbMaxGen" IsChecked="False"/>
-            <TextBox x:Name="tbMaxGeneration" IsEnabled="{Binding Path=IsChecked, ElementName=cbMaxGen}" Width="100" Margin="10" Text="{Binding MaxGenerationCount, Mode=OneWayToSource, FallbackValue=100}"/>
         </StackPanel>
-        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="Beige"/>
+        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631"/>
     </Grid>
 </Window>
