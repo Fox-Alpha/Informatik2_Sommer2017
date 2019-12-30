@@ -22,3 +22,12 @@ Neue Features
 https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife.PNG
 
 https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife_run.PNG
+
+## Conways Game Of Life
+
+Wer mit dem GameOfLife nichts anfangen kann, kann sich hier mal einlesen
+https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens
+Interessant sind hier einige der Beispiele, ich finde das Beispiel für ein sich auflösendes Muster
+https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens#Andere_Objekte
+
+Die weitere Beispiele sind auch einen Blick wert
