@@ -439,6 +439,13 @@ namespace GameOfLife
                     felder[i, j] = r;
                 }
             }
+            Runtime = TimeSpan.FromSeconds(0);
+            RuntimeStart = 0d;
+             
+            CountAliveEntity = 0;
+            CountDeadEntity = 0;
+            CurrentGenerationTurn = 0;
+
         }
 
         private void RandomField_Click(object sender, RoutedEventArgs e)
