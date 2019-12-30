@@ -151,30 +151,45 @@ namespace GameOfLife
                     Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
                     Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
                     r.MouseDown += R_MouseDown;
+
+                    felder[i, j] = r;
                 }
             }
         }
 
         private void RandomizeField()
         {
-            zeichenfläche.Children.Clear();
-
-            double unixTimestamp = (double)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            randomizer = new Random((int)unixTimestamp);
+            //zeichenfläche.Children.Clear();
+            int seed = (int)GetUnixTimeStampMilliseconds();
+            randomizer = new Random((int)seed);
 
             for (int i = 0; i < anzahlZellenHoch; i++)
             {
                 for (int j = 0; j < anzahlZellenBreit; j++)
                 {
-                    Rectangle r = new Rectangle();
-                    r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
-                    r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+                    Rectangle r = felder[i, j];
+
+                    if(r == null)
+                    {
+                        r = new Rectangle();
+                        r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
+                        r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+
+                        zeichenfläche.Children.Add(r);
+                        Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
+                        Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                        r.MouseDown += R_MouseDown;
+                    }
+
+                    int idx = zeichenfläche.Children.IndexOf(r);
+                    
 
                     int rnd = randomizer.Next(0, 100);
 
                     if (rnd <= 45)
                     {
                         r.Fill = entityDead;
+                        //((Rectangle)zeichenfläche.Children[idx]).Fill = entityDead;
                         CountDeadEntity++;
                     }
                     else if (rnd > 75)
@@ -194,10 +209,7 @@ namespace GameOfLife
                             CountAliveEntity++;
                     }
 
-                    zeichenfläche.Children.Add(r);
-                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
-                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
-                    r.MouseDown += R_MouseDown;
+                    zeichenfläche.Children[idx] = r;
 
                     felder[i, j] = r;
                 }
@@ -329,7 +341,7 @@ namespace GameOfLife
 
         private static double GetUnixTimeStampMilliseconds()
         {
-            return (double)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
+            return (double)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
 
         private void EnableTimer(bool an = true)
