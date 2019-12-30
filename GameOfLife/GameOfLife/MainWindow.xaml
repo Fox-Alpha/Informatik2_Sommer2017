@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:GameOfLife"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" MaxHeight="750" MaxWidth="1000" ContentRendered="Window_ContentRendered">
-    
+        Title="MainWindow" MaxHeight="750" MaxWidth="1000" ContentRendered="Window_ContentRendered"
+        MinHeight="500" MinWidth="730" Width="997.977" Height="750.811">
+
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
@@ -16,7 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <StackPanel Orientation="Vertical" Grid.Column="0" Background="Aqua">
             <Button x:Name="buttonStartStop" Content="Starte Animation!" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="Button_Click" />
 
@@ -25,7 +26,7 @@
                 <CheckBox Content="Max Generationen" Margin="10" x:Name="cbMaxGen" IsChecked="False"/>
                 <TextBox x:Name="tbMaxGeneration" IsEnabled="{Binding Path=IsChecked, ElementName=cbMaxGen}" Width="100" Margin="10" Text="{Binding MaxGenerationCount, Mode=OneWayToSource, FallbackValue=25}"/>
             </WrapPanel>
-            
+
 
             <TextBlock Text="{Binding Path=CountAliveEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Alive: {0}, FallbackValue=CountAliveEntity }" Margin="10"/>
             <TextBlock Text="{Binding Path=CountDeadEntity, UpdateSourceTrigger=PropertyChanged, StringFormat=Dead: {0}, FallbackValue=CountDeadEntity}" Margin="10"/>
@@ -44,6 +45,6 @@
             </lvc:Gauge>
 
         </StackPanel>
-        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631"/>
+        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631" MinWidth="450" MinHeight="450"/>
     </Grid>
 </Window>
