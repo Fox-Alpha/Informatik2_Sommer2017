@@ -16,3 +16,9 @@ Neue Features
   * Visuelle Anzeige der Alive Felder
 * Feld passt sich bei Änderung der Fenstergrösse mit an
 * Viele Optimierungen am Code zum erstellen der Generationen
+
+## Hauptansicht der verbesserten GUI
+
+[[https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife.PNG|alt=Hauptansicht]]
+
+[[https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife_run.PNG|alt=Laufzeit]]
