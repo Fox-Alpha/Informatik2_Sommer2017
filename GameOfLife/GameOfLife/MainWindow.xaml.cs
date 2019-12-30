@@ -127,7 +127,7 @@ namespace GameOfLife
 
         private void RunTimer_Tick(object sender, EventArgs e)
         {
-            Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds()- RuntimeStart);
+            Runtime = TimeSpan.FromSeconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -273,9 +273,6 @@ namespace GameOfLife
             }
 
             CurrentGenerationTurn++;
-
-            //SeriesCollection[0].Values.Add((double)CountAliveEntity);
-            //SeriesCollection[1].Values.Add((double)CountDeadEntity);
 
             if (cbMaxGen.IsChecked == true && CurrentGenerationTurn >= MaxGenerationCount)
             {
