@@ -28,11 +28,19 @@
             <WrapPanel Name="OptionPanel" Orientation="Vertical" Background="Beige" IsEnabled="{Binding EnableOptions}">
                 <Button x:Name="RandomField" Content="Randomize Field" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="RandomField_Click"/>
                 <StackPanel Orientation="Vertical">
-                    <Button x:Name="EmptyField" Content="Empty Field" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Width="120" Click="EmptyField_Click"/>
-                    <CheckBox Content="Manuelle Generationen" Margin="5" x:Name="cbManGen" IsChecked="False"/>
+                    <Button x:Name="EmptyField" Content="Empty Field" HorizontalAlignment="Left" Margin="10 0 5 0" VerticalAlignment="Top" Width="120" Click="EmptyField_Click"/>
+                    <CheckBox Content="Manuelle Generationen" Margin="10 3 5 0" x:Name="cbManGen" IsChecked="False"/>
                 </StackPanel>
-                <CheckBox Content="Max Generationen" Margin="10" x:Name="cbMaxGen" IsChecked="False"/>
-                <TextBox x:Name="tbMaxGeneration" IsEnabled="{Binding Path=IsChecked, ElementName=cbMaxGen}" Width="100" Margin="10" Text="{Binding MaxGenerationCount, Mode=OneWayToSource, FallbackValue=25}"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Content="Max Generationen" Margin="10,5,0,5" x:Name="cbMaxGen" IsChecked="False"/>
+                    <TextBox x:Name="tbMaxGeneration" IsEnabled="{Binding Path=IsChecked, ElementName=cbMaxGen}" Width="35" Margin="5 0 0 0" Text="{Binding MaxGenerationCount, Mode=OneWayToSource, FallbackValue=25}" TextAlignment="Center" GotFocus="TextBox_GotFocus"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Felder X/Y" Margin="10,0"/>
+                    <TextBox Width="35" Margin="5 0" Text="{Binding AnzahlZellenBreit, Mode=TwoWay}" MaxLength="10" TextAlignment="Center" GotFocus="TextBox_GotFocus"/>
+                    <TextBox Width="35" Margin="5 0" Text="{Binding AnzahlZellenHoch, Mode=TwoWay}" MaxLength="10" TextAlignment="Center" GotFocus="TextBox_GotFocus"/>
+                </StackPanel>
+
             </WrapPanel>
 
 

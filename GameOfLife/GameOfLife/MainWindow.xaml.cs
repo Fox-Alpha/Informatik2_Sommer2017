@@ -25,8 +25,8 @@ namespace GameOfLife
         public DispatcherTimer updateTimer, runtimeTimer;
         private Random randomizer = new Random();
 
-        const int anzahlZellenBreit = 30;
-        const int anzahlZellenHoch = 30;
+        private int anzahlZellenBreit = 30;
+        private int anzahlZellenHoch = 30;
 
         private int maxAnzahlFelder = 0;
         public int MaxAnzahlFelder { get => maxAnzahlFelder;
@@ -37,7 +37,7 @@ namespace GameOfLife
             }
         }
 
-        Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
+        Rectangle[,] felder;
         private bool isFieldsInitialized = false;
 
         private int maxGenerationCount;
@@ -124,7 +124,8 @@ namespace GameOfLife
         private TimeSpan runtime;
         public TimeSpan Runtime { get => runtime; set { runtime = value; this.NotifyPropertyChanged("Runtime"); } }
 
-        
+        public int AnzahlZellenBreit { get => anzahlZellenBreit; set => anzahlZellenBreit = value; }
+        public int AnzahlZellenHoch { get => anzahlZellenHoch; set => anzahlZellenHoch = value; }
 
         public MainWindow()
         {
@@ -139,12 +140,14 @@ namespace GameOfLife
             runtimeTimer.Interval = TimeSpan.FromSeconds(1);
             runtimeTimer.Tick += RunTimer_Tick;
 
+            felder = new Rectangle[AnzahlZellenHoch, AnzahlZellenBreit];
+
             this.DataContext = this;
 
             CountDeadEntity = 0;
             CountAliveEntity = 0;
             CurrentGenerationTurn = 0;
-            MaxAnzahlFelder = anzahlZellenBreit * anzahlZellenHoch;
+            MaxAnzahlFelder = AnzahlZellenBreit * AnzahlZellenHoch;
 
             EnableOptions = true;
         }
@@ -162,18 +165,18 @@ namespace GameOfLife
         }
         private void InitFields()
         {
-            for (int i = 0; i < anzahlZellenHoch; i++)
+            for (int i = 0; i < AnzahlZellenHoch; i++)
             {
-                for (int j = 0; j < anzahlZellenBreit; j++)
+                for (int j = 0; j < AnzahlZellenBreit; j++)
                 {
                     Rectangle r = new Rectangle();
-                    r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
-                    r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+                    r.Width = zeichenfläche.ActualWidth / AnzahlZellenBreit - 2.0;
+                    r.Height = zeichenfläche.ActualHeight / AnzahlZellenHoch - 2.0;
 
                     r.Fill = Brushes.Aqua;
                     zeichenfläche.Children.Add(r);
-                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
-                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / AnzahlZellenBreit);
+                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / AnzahlZellenHoch);
                     r.MouseDown += R_MouseDown;
 
                     felder[i, j] = r;
@@ -188,21 +191,23 @@ namespace GameOfLife
             int seed = (int)GetUnixTimeStampSeconds();
             randomizer = new Random((int)seed);
 
-            for (int i = 0; i < anzahlZellenHoch; i++)
+            CheckFelderSize();
+
+            for (int i = 0; i < AnzahlZellenHoch; i++)
             {
-                for (int j = 0; j < anzahlZellenBreit; j++)
+                for (int j = 0; j < AnzahlZellenBreit; j++)
                 {
                     Rectangle r = felder[i, j];
 
                     if(r == null)
                     {
                         r = new Rectangle();
-                        r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
-                        r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+                        r.Width = zeichenfläche.ActualWidth / AnzahlZellenBreit - 2.0;
+                        r.Height = zeichenfläche.ActualHeight / AnzahlZellenHoch - 2.0;
 
                         zeichenfläche.Children.Add(r);
-                        Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
-                        Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                        Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / AnzahlZellenBreit);
+                        Canvas.SetTop(r, i * zeichenfläche.ActualHeight / AnzahlZellenHoch);
                         r.MouseDown += R_MouseDown;
                     }
 
@@ -263,10 +268,10 @@ namespace GameOfLife
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            int[,] anzahlNachbarn = new int[anzahlZellenHoch, anzahlZellenBreit];
-            for (int i = 0; i < anzahlZellenHoch; i++)
+            int[,] anzahlNachbarn = new int[AnzahlZellenHoch, AnzahlZellenBreit];
+            for (int i = 0; i < AnzahlZellenHoch; i++)
             {
-                for (int j = 0; j < anzahlZellenBreit; j++)
+                for (int j = 0; j < AnzahlZellenBreit; j++)
                 {
                     CountNeightbors(ref anzahlNachbarn, i, j);
                 }
@@ -275,9 +280,9 @@ namespace GameOfLife
             CountAliveEntity = 0;
             CountDeadEntity = 0;
 
-            for (int i = 0; i < anzahlZellenHoch; i++)
+            for (int i = 0; i < AnzahlZellenHoch; i++)
             {
-                for (int j = 0; j < anzahlZellenBreit; j++)
+                for (int j = 0; j < AnzahlZellenBreit; j++)
                 {
                     if(anzahlNachbarn[i, j] < 2 || anzahlNachbarn[i, j] > 3)
                     {
@@ -315,18 +320,18 @@ namespace GameOfLife
         {
             int iDarüber = X - 1;
             if (iDarüber < 0)
-            { iDarüber = anzahlZellenHoch - 1; }
+            { iDarüber = AnzahlZellenHoch - 1; }
 
             int iDarunter = X + 1;
-            if (iDarunter >= anzahlZellenHoch)
+            if (iDarunter >= AnzahlZellenHoch)
             { iDarunter = 0; }
 
             int jLinks = Y - 1;
             if (jLinks < 0)
-            { jLinks = anzahlZellenBreit - 1; }
+            { jLinks = AnzahlZellenBreit - 1; }
 
             int jRechts = Y + 1;
-            if (jRechts >= anzahlZellenBreit)
+            if (jRechts >= AnzahlZellenBreit)
             { jRechts = 0; }
 
             int nachbarn = 0;
@@ -364,14 +369,16 @@ namespace GameOfLife
 
                 RuntimeStart = GetUnixTimeStampSeconds();
                 Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampSeconds() - RuntimeStart);
-            }
 
-            if (CountAliveEntity > 0)
-            {
-                EnableTimer();
+                if (CountAliveEntity > 0)
+                {
+                    EnableTimer();
+                }
+                else
+                    TxtErrorMessage = "Es muss mindestens ein Feld als Alive gekennzeichnet sein !";
             }
             else
-                TxtErrorMessage = "Es muss mindestens ein Feld als Alive gekennzeichnet sein";
+                EnableTimer();
         }
 
         private static double GetUnixTimeStampSeconds()
@@ -409,16 +416,16 @@ namespace GameOfLife
                 return;
             }
 
-            for (int i = 0; i < anzahlZellenHoch; i++)
+            for (int i = 0; i < AnzahlZellenHoch; i++)
             {
-                for (int j = 0; j < anzahlZellenBreit; j++)
+                for (int j = 0; j < AnzahlZellenBreit; j++)
                 {
                     //Rectangle r = new Rectangle();
                     Rectangle r = felder[i, j];
                     int idx = zeichenfläche.Children.IndexOf(r);
 
-                    r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
-                    r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+                    r.Width = zeichenfläche.ActualWidth / AnzahlZellenBreit - 2.0;
+                    r.Height = zeichenfläche.ActualHeight / AnzahlZellenHoch - 2.0;
 
                     //r.Fill = Brushes.Aqua;
 
@@ -426,8 +433,8 @@ namespace GameOfLife
 
                     //zeichenfläche.Children.Add(r);
 
-                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
-                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / AnzahlZellenBreit);
+                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / AnzahlZellenHoch);
                     //r.MouseDown += R_MouseDown;
 
                     felder[i, j] = r;
@@ -441,25 +448,31 @@ namespace GameOfLife
             int seed = (int)GetUnixTimeStampSeconds();
             randomizer = new Random((int)seed);
 
-            for (int i = 0; i < anzahlZellenHoch; i++)
+            CheckFelderSize();
+
+            for (int i = 0; i < AnzahlZellenHoch; i++)
             {
-                for (int j = 0; j < anzahlZellenBreit; j++)
+                for (int j = 0; j < AnzahlZellenBreit; j++)
                 {
                     Rectangle r = felder[i, j];
                     int idx = zeichenfläche.Children.IndexOf(r);
 
-                    if (r == null || idx < 0)
+                    if (r == null || idx == -1)
                     {
                         r = new Rectangle();
-                        r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
-                        r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+                        r.Width = zeichenfläche.ActualWidth / AnzahlZellenBreit - 2.0;
+                        r.Height = zeichenfläche.ActualHeight / AnzahlZellenHoch - 2.0;
 
                         zeichenfläche.Children.Add(r);
-                        Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
-                        Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                        Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / AnzahlZellenBreit);
+                        Canvas.SetTop(r, i * zeichenfläche.ActualHeight / AnzahlZellenHoch);
                         r.MouseDown += R_MouseDown;
-                    }                   
+                    }
 
+                    if (idx == -1)
+                    {
+                        idx = zeichenfläche.Children.IndexOf(r);
+                    }
                     r.Fill = Brushes.Aqua;
 
                     zeichenfläche.Children[idx] = r;
@@ -476,9 +489,31 @@ namespace GameOfLife
 
         }
 
+        private void CheckFelderSize()
+        {
+            if ((felder.GetLength(0) != AnzahlZellenHoch) || (felder.GetLength(1) != AnzahlZellenBreit))
+            {
+                felder = null;
+                felder = new Rectangle[AnzahlZellenHoch, AnzahlZellenBreit];
+
+                zeichenfläche.Children.Clear();
+            }
+        }
+
         private void CancelErrorMessage_Click(object sender, RoutedEventArgs e)
         {
             TxtErrorMessage = string.Empty;
+        }
+
+        
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((TextBox)sender).Select(0, ((TextBox)sender).Text.Length);
+        }
+
+        private void TextBox_Error(object sender, ValidationErrorEventArgs e)
+        {
+
         }
 
         private void RandomField_Click(object sender, RoutedEventArgs e)
