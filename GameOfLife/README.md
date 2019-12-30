@@ -19,6 +19,6 @@ Neue Features
 
 ## Hauptansicht der verbesserten GUI
 
-[[https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife.PNG|alt=Hauptansicht]]
+https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife.PNG
 
-[[https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife_run.PNG|alt=Laufzeit]]
+https://github.com/Fox-Alpha/Informatik2_Sommer2017/blob/master/GameOfLife/GameOfLife_run.PNG
