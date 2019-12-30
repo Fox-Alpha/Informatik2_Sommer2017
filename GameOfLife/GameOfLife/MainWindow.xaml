@@ -45,6 +45,6 @@
             </lvc:Gauge>
 
         </StackPanel>
-        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631" MinWidth="450" MinHeight="450"/>
+        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631" MinWidth="450" MinHeight="450" SizeChanged="Zeichenfläche_SizeChanged"/>
     </Grid>
 </Window>

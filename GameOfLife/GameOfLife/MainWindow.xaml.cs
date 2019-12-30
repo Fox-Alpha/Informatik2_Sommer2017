@@ -38,6 +38,7 @@ namespace GameOfLife
         }
 
         Rectangle[,] felder = new Rectangle[anzahlZellenHoch, anzahlZellenBreit];
+        private bool isFieldsInitialized = false;
 
         private int maxGenerationCount;
         public int MaxGenerationCount { get { return maxGenerationCount;  }
@@ -155,6 +156,7 @@ namespace GameOfLife
                     felder[i, j] = r;
                 }
             }
+            isFieldsInitialized = true;
         }
 
         private void RandomizeField()
@@ -362,6 +364,39 @@ namespace GameOfLife
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+
+        private void Zeichenfläche_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (!zeichenfläche.IsInitialized || !isFieldsInitialized)
+            {
+                return;
+            }
+
+            for (int i = 0; i < anzahlZellenHoch; i++)
+            {
+                for (int j = 0; j < anzahlZellenBreit; j++)
+                {
+                    //Rectangle r = new Rectangle();
+                    Rectangle r = felder[i, j];
+                    int idx = zeichenfläche.Children.IndexOf(r);
+
+                    r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
+                    r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+
+                    //r.Fill = Brushes.Aqua;
+
+                    zeichenfläche.Children[idx] = r;
+
+                    //zeichenfläche.Children.Add(r);
+
+                    Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
+                    Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                    //r.MouseDown += R_MouseDown;
+
+                    felder[i, j] = r;
+                }
+            }
         }
 
         private void RandomField_Click(object sender, RoutedEventArgs e)
