@@ -8,6 +8,9 @@
         mc:Ignorable="d"
         Title="MainWindow" MaxHeight="750" MaxWidth="1000" ContentRendered="Window_ContentRendered"
         MinHeight="500" MinWidth="730" Width="997.977" Height="750.811">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
 
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
@@ -15,10 +18,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Column="0" Background="Aqua">
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="2" Background="Aqua">
             <Button x:Name="buttonStartStop" Content="Starte Animation!" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="120" Click="Button_Click" />
 
             <WrapPanel Name="OptionPanel" Orientation="Vertical" Background="Beige" IsEnabled="{Binding EnableOptions}">
@@ -49,6 +53,13 @@
             </lvc:Gauge>
 
         </StackPanel>
-        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Background="#FFD6D631" MinWidth="450" MinHeight="450" SizeChanged="Zeichenfläche_SizeChanged"/>
+
+        <DockPanel Grid.Column="1" Background="Aqua" Margin="5" LastChildFill="False" Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock x:Name="tblErrorMessage" Padding="5 0 5 0" Margin="2,2,5,2" Text="{Binding TxtErrorMessage}" FontStyle="Oblique" FontSize="14" FontWeight="Bold" Background="Black" Foreground="#FFF00A0A"/>
+            <Button x:Name="CancelErrorMessage" Content="X" Margin="3,0,0,0" Click="CancelErrorMessage_Click" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" ToolTip="Fehlermeldung zurücksetzen"
+                     Foreground="#FFF00A0A" FontWeight="Bold" FontSize="14" Background="Black"/>
+        </DockPanel>
+
+        <Canvas x:Name="zeichenfläche" Height="auto" Margin="10" Width="auto" Grid.Column="1" Grid.Row="1" Background="#FFD6D631" MinWidth="450" MinHeight="450" SizeChanged="Zeichenfläche_SizeChanged"/>
     </Grid>
 </Window>

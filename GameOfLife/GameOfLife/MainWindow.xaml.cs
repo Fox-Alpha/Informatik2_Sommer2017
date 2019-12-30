@@ -99,9 +99,32 @@ namespace GameOfLife
             }
         }
 
+        private bool hasErrorMessage = false;
+
+        public bool HasErrorMessage
+        {
+            get { return hasErrorMessage; }
+            set {
+                hasErrorMessage = value;
+                this.NotifyPropertyChanged("HasErrorMessage");
+            }
+        }
+
+        private string txtErrorMessage;
+        public string TxtErrorMessage { get => txtErrorMessage;
+            set {
+                txtErrorMessage = value;
+                this.NotifyPropertyChanged("TxtErrorMessage");
+
+                HasErrorMessage = !String.IsNullOrWhiteSpace(value);
+            }
+        }
+
         private double RuntimeStart;
         private TimeSpan runtime;
         public TimeSpan Runtime { get => runtime; set { runtime = value; this.NotifyPropertyChanged("Runtime"); } }
+
+        
 
         public MainWindow()
         {
@@ -347,6 +370,8 @@ namespace GameOfLife
             {
                 EnableTimer();
             }
+            else
+                TxtErrorMessage = "Es muss mindestens ein Feld als Alive gekennzeichnet sein";
         }
 
         private static double GetUnixTimeStampSeconds()
@@ -449,6 +474,11 @@ namespace GameOfLife
             CountDeadEntity = 0;
             CurrentGenerationTurn = 0;
 
+        }
+
+        private void CancelErrorMessage_Click(object sender, RoutedEventArgs e)
+        {
+            TxtErrorMessage = string.Empty;
         }
 
         private void RandomField_Click(object sender, RoutedEventArgs e)
