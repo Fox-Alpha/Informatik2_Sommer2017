@@ -223,12 +223,18 @@ namespace GameOfLife
             if (sender is Rectangle)
             {
                 Rectangle r = sender as Rectangle;
-                if (r.Fill == Brushes.Green)
+                if (r.Fill == entityAlive)
                 {
                     r.Fill = entityDead;
+                    CountDeadEntity++;
                 }
                 else
+                {
                     r.Fill = entityAlive;
+                    CountAliveEntity++;
+                }
+                    
+
             }
         }
 
@@ -329,7 +335,9 @@ namespace GameOfLife
             if (!updateTimer.IsEnabled)
             {
                 CurrentGenerationTurn = 0;
-                RandomizeField();
+
+                if(cbManGen.IsChecked != true && CountAliveEntity == 0)
+                    RandomizeField();
 
                 RuntimeStart = GetUnixTimeStampMilliseconds();
                 Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
@@ -393,6 +401,40 @@ namespace GameOfLife
                     Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
                     Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
                     //r.MouseDown += R_MouseDown;
+
+                    felder[i, j] = r;
+                }
+            }
+        }
+
+        private void EmptyField_Click(object sender, RoutedEventArgs e)
+        {
+            //zeichenfläche.Children.Clear();
+            int seed = (int)GetUnixTimeStampMilliseconds();
+            randomizer = new Random((int)seed);
+
+            for (int i = 0; i < anzahlZellenHoch; i++)
+            {
+                for (int j = 0; j < anzahlZellenBreit; j++)
+                {
+                    Rectangle r = felder[i, j];
+                    int idx = zeichenfläche.Children.IndexOf(r);
+
+                    if (r == null || idx < 0)
+                    {
+                        r = new Rectangle();
+                        r.Width = zeichenfläche.ActualWidth / anzahlZellenBreit - 2.0;
+                        r.Height = zeichenfläche.ActualHeight / anzahlZellenHoch - 2.0;
+
+                        zeichenfläche.Children.Add(r);
+                        Canvas.SetLeft(r, j * zeichenfläche.ActualWidth / anzahlZellenBreit);
+                        Canvas.SetTop(r, i * zeichenfläche.ActualHeight / anzahlZellenHoch);
+                        r.MouseDown += R_MouseDown;
+                    }                   
+
+                    r.Fill = Brushes.Aqua;
+
+                    zeichenfläche.Children[idx] = r;
 
                     felder[i, j] = r;
                 }
