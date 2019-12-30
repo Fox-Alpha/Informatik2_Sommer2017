@@ -282,7 +282,7 @@ namespace GameOfLife
 
             CurrentGenerationTurn++;
 
-            if (cbMaxGen.IsChecked == true && CurrentGenerationTurn >= MaxGenerationCount)
+            if ((cbMaxGen.IsChecked == true && CurrentGenerationTurn >= MaxGenerationCount) || (CountAliveEntity == 0))
             {
                 EnableTimer();
             }
@@ -343,7 +343,10 @@ namespace GameOfLife
                 Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
             }
 
-            EnableTimer();
+            if (CountAliveEntity > 0)
+            {
+                EnableTimer();
+            }
         }
 
         private static double GetUnixTimeStampMilliseconds()
