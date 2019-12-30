@@ -128,7 +128,7 @@ namespace GameOfLife
 
         private void RunTimer_Tick(object sender, EventArgs e)
         {
-            Runtime = TimeSpan.FromSeconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
+            Runtime = TimeSpan.FromSeconds(GetUnixTimeStampSeconds() - RuntimeStart);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -162,7 +162,7 @@ namespace GameOfLife
         private void RandomizeField()
         {
             //zeichenfläche.Children.Clear();
-            int seed = (int)GetUnixTimeStampMilliseconds();
+            int seed = (int)GetUnixTimeStampSeconds();
             randomizer = new Random((int)seed);
 
             for (int i = 0; i < anzahlZellenHoch; i++)
@@ -339,8 +339,8 @@ namespace GameOfLife
                 if(cbManGen.IsChecked != true && CountAliveEntity == 0)
                     RandomizeField();
 
-                RuntimeStart = GetUnixTimeStampMilliseconds();
-                Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampMilliseconds() - RuntimeStart);
+                RuntimeStart = GetUnixTimeStampSeconds();
+                Runtime = TimeSpan.FromMilliseconds(GetUnixTimeStampSeconds() - RuntimeStart);
             }
 
             if (CountAliveEntity > 0)
@@ -349,7 +349,7 @@ namespace GameOfLife
             }
         }
 
-        private static double GetUnixTimeStampMilliseconds()
+        private static double GetUnixTimeStampSeconds()
         {
             return (double)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
@@ -413,7 +413,7 @@ namespace GameOfLife
         private void EmptyField_Click(object sender, RoutedEventArgs e)
         {
             //zeichenfläche.Children.Clear();
-            int seed = (int)GetUnixTimeStampMilliseconds();
+            int seed = (int)GetUnixTimeStampSeconds();
             randomizer = new Random((int)seed);
 
             for (int i = 0; i < anzahlZellenHoch; i++)
